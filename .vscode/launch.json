@@ -1,0 +1,12 @@
+{
+	"version": "0.2.0",
+	"configurations": [{
+		"name": "Launch Puppeteer",
+		"type": "node",
+		"request": "launch",
+		"cwd": "${workspaceFolder}",
+		"port": 9222,
+		"timeout": 30000,
+		"program": "/Users/adj/VisualCodeProjects/pa11y-puppeteer/src/index.js",
+	}]
+}

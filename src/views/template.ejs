@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><%= pageTitle %></title>
+		<link rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+		<link rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/default.min.css">
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js">
+		</script>
+		<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            hljs.highlightAll();
+            const buttons = document.querySelectorAll('[data-bs-toggle="collapse"]');
+            buttons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const target = document.querySelector(this.dataset.bsTarget);
+                    const expanded = target.classList.contains('show');
+                    buttons.forEach(function(btn) {
+                        if (btn !== button) {
+                            const otherTarget = document.querySelector(btn.dataset.bsTarget);
+                            otherTarget.classList.remove('show');
+                        }
+                    });
+                    target.classList.toggle('show', !expanded);
+                });
+            });
+        });
+    </script>
+		<style>
+        .container {
+            margin-top: 50px;
+        }
+		.count.error:hover,
+		.count.warning:hover,
+		.count.notice:hover {
+			font-size: 18px;
+		}
+		.btn-link {
+			color: #007bff;
+			text-decoration: none;
+			transition: color 0.3s ease-in-out;
+		}
+
+		.btn-link:hover {
+			color: #0056b3;
+		}
+
+        .error {
+            background-color: #f8d7da;
+        }
+
+        .warning {
+            background-color: #fff3cd;
+        }
+
+        .notice {
+            background-color: #d1ecf1;
+        }
+
+        .generated-at {
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Accessibility Report for: <%= url %></h1>
+
+			<!-- Error, Warning, Notice counts -->
+			<p class="counts">
+				<span class="count error"><%- errors.length %> Errors</span>
+				<span class="count warning"><%- warnings.length %> Warnings</span>
+				<span class="count notice"><%- notices.length %> Notices</span>
+			</p>
+			<p>Report generated on: <%= creationDate %></p>
+
+			<div class="accordion" id="accordionReport">
+				<!-- Errors -->
+				<% errors.forEach((error, index) => { %>
+				<div class="card">
+					<div class="card-header" id="errorHeading<%= index %>">
+						<h2 class="mb-0">
+							<button class="btn btn-link" type="button" data-bs-toggle="collapse"
+								data-bs-target="#errorCollapse<%= index %>"
+								aria-expanded="<%= index === 0 ? 'true' : 'false' %>"
+								aria-controls="errorCollapse<%= index %>">
+								Error: <%- error.message %>
+							</button>
+						</h2>
+					</div>
+					<div id="errorCollapse<%= index %>"
+						class="collapse<%= index === 0 ? ' show' : '' %>"
+						aria-labelledby="errorHeading<%= index %>"
+						data-bs-parent="#accordionReport">
+						<div class="card-body">
+							<p>Snippet:</p>
+							<pre><code class="html"><%- hljs.highlightAuto(error.context).value %></code></pre>
+							<p>Code: <%- error.code %></p>
+							<% if (error.hint) { %>
+							<p>Method to Fix: <a href="<%- error.hint %>"><%- error.hint %></a></p>
+							<% } %>
+						</div>
+					</div>
+				</div>
+				<% }) %>
+
+				<!-- Warnings -->
+				<% warnings.forEach((warning, index) => { %>
+				<div class="card">
+					<div class="card-header" id="warningHeading<%= index %>">
+						<h2 class="mb-0">
+							<button class="btn btn-link" type="button" data-bs-toggle="collapse"
+								data-bs-target="#warningCollapse<%= index %>"
+								aria-expanded="<%= index === 0 ? 'true' : 'false' %>"
+								aria-controls="warningCollapse<%= index %>">
+								Warning: <%- warning.message %>
+							</button>
+						</h2>
+					</div>
+					<div id="warningCollapse<%= index %>"
+						class="collapse<%= index === 0 ? ' show' : '' %>"
+						aria-labelledby="warningHeading<%= index %>"
+						data-bs-parent="#accordionReport">
+						<div class="card-body">
+							<p>Snippet:</p>
+							<pre><code class="html"><%- hljs.highlightAuto(warning.context).value %></code></pre>
+							<p>Code: <%- warning.code %></p>
+							<% if (warning.hint) { %>
+							<p>Method to Fix: <a href="<%- warning.hint %>"><%- warning.hint %></a></p>
+							<% } %>
+						</div>
+					</div>
+				</div>
+				<% }) %>
+			</div>
+		</div>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js">
+		</script>
+	</body>
+</html>
